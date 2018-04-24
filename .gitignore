@@ -1,0 +1,14 @@
+*.class
+
+.svn
+target
+*.iml
+buildresult/*
+.idea
+out
+
+!*.exe
+!*.pdb
+!*.dll
+
+node_modules
