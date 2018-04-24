@@ -40,7 +40,7 @@ open class StartCls {
                 getBaseJarPath().listFiles().filter { it.isFile && it.name.matches("""\d+\.\d+\.\d+.version""".toRegex()) }.forEach {
                     it.delete()
                 }
-                
+
                 File(getBaseJarPath(),"1.2.3.version").createNewFile()
 
             }
