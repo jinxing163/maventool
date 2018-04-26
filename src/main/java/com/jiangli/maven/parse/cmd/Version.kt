@@ -24,9 +24,11 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
                     return -1
                 } else if (!isNumber(split1[index]) && isNumber(split2[index])) {
                     return 1
+                } else if (!isNumber(split1[index]) && !isNumber(split2[index])) {
+                    return 0
                 }
 
-                val cmp = split2[index].compareTo(split1[index])
+                val cmp = split2[index].toInt().compareTo(split1[index].toInt())
                 if (cmp!=0 ) {
                     return cmp
                 }
