@@ -34,6 +34,56 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- feign -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>9.4.0</version>
+        </dependency>
+        <!--JSON格式-->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-gson</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+        <!--JSON格式-->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-jackson</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+        <!--xml格式-->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-sax</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+        <!--XML格式-->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-jaxb</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+        <!--使用 JAX-RS 规范重写覆盖了默认的注解处理-->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-jaxrs</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+        <!-- 使用 OkHttp 来发送 Feign 的请求，OkHttp 支持 SPDY (SPDY是Google开发的基于TCP的传输层协议，用以最小化网络延迟，提升网络速度，优化用户的网络使用体验),并有更好的控制http请求。 -->
+        <!--<dependency>-->
+            <!--<groupId>io.github.openfeign</groupId>-->
+            <!--<artifactId>feign-okhttp</artifactId>-->
+            <!--<version>9.4.0</version>-->
+        <!--</dependency>-->
+
+        <!--dom4j-->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
         <!--kotlin-->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -53,6 +103,12 @@
             <artifactId>junit</artifactId>
             <version>4.8</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
         </dependency>
     </dependencies>
 
@@ -99,6 +155,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.jiangli.maven.parse.MainKt</mainClass>
+                </configuration>
             </plugin>
 
             <!-- http://blog.csdn.net/xiao__gui/article/details/47341385 -->

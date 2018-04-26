@@ -16,9 +16,11 @@ open class Config {
     var artifaceId: java.lang.String? = null
     var retreiveIdx: java.lang.Integer? = null
     var nextAddOffset: java.lang.String? = null
+    var defaultVersion: java.lang.String? = null
 
     override fun toString(): String {
-        return "Config(cmd=$cmd, urlprefix=$urlprefix, groupId=$groupId, artifaceId=$artifaceId, retreiveIdx=$retreiveIdx, nextAddOffset=$nextAddOffset)"
+        return "Config(cmd=$cmd, urlprefix=$urlprefix, groupId=$groupId, artifaceId=$artifaceId, retreiveIdx=$retreiveIdx, nextAddOffset=$nextAddOffset, defaultVersion=$defaultVersion)"
     }
+
 
 }
