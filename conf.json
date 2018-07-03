@@ -1,0 +1,11 @@
+{
+	"configs":[{
+		"profile_id":"jar-openapi-app",
+		"groupId":"com.zhihuishu.aries.run",
+		"artifaceId":"openapi-appserver"
+	}],
+	"project_path":"${jarPath}"
+}
+
+
+

@@ -1,15 +1,14 @@
 package com.jiangli.maven.parse.cmd.version
 
 import com.jiangli.maven.parse.Config
+import com.jiangli.maven.parse.Util
 import com.jiangli.maven.parse.Util.getBaseJarPath
 import com.jiangli.maven.parse.cmd.BaseCmd
 import feign.Feign
 import feign.FeignException
-import org.apache.commons.io.IOUtils
 import org.dom4j.DocumentHelper
 import org.springframework.stereotype.Component
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 /**
@@ -96,10 +95,7 @@ class VersionCmd:BaseCmd("version"){
                     """.trimIndent()
 
             //create dependencyFile
-            val dependencyFile = File(getBaseJarPath(), "依赖.txt")
-            dependencyFile.createNewFile()
-
-            IOUtils.write(dependency, FileOutputStream(dependencyFile), "utf8")
+            Util.writeToFile(dependency,getBaseJarPath(),"依赖.txt")
         }
     }
 }

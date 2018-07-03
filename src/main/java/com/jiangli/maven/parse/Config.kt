@@ -11,6 +11,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "config")
 open class Config {
     var cmd: java.lang.String? = null
+
+    var initDirName: java.lang.String? = null
+
     var urlprefix: java.lang.String? = null
     var groupId: java.lang.String? = null
     var artifaceId: java.lang.String? = null
@@ -19,7 +22,7 @@ open class Config {
     var defaultVersion: java.lang.String? = null
 
     override fun toString(): String {
-        return "Config(cmd=$cmd, urlprefix=$urlprefix, groupId=$groupId, artifaceId=$artifaceId, retreiveIdx=$retreiveIdx, nextAddOffset=$nextAddOffset, defaultVersion=$defaultVersion)"
+        return "Config(cmd=$cmd, initDirName=$initDirName, urlprefix=$urlprefix, groupId=$groupId, artifaceId=$artifaceId, retreiveIdx=$retreiveIdx, nextAddOffset=$nextAddOffset, defaultVersion=$defaultVersion)"
     }
 
 
