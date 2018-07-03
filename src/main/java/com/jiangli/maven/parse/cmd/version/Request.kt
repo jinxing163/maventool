@@ -1,4 +1,4 @@
-package com.jiangli.maven.parse.cmd
+package com.jiangli.maven.parse.cmd.version
 
 import feign.RequestLine
 
@@ -16,10 +16,4 @@ interface NexusMvnXmlRequest {
 
 //    @RequestLine("GET /")
 //    fun req(): Root
-}
-class Root{
-    var content:Content?=null
-}
-class Content{
-
 }

@@ -1,4 +1,4 @@
-package com.jiangli.maven.parse.cmd
+package com.jiangli.maven.parse.cmd.version
 
 /**
  *

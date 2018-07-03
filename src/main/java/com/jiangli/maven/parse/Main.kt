@@ -1,8 +1,11 @@
 package com.jiangli.maven.parse
 
-import com.jiangli.maven.parse.cmd.NexusMvnXmlRequest
-import com.jiangli.maven.parse.cmd.VersionDto
+import com.jiangli.maven.parse.Util.getBaseJarPath
+import com.jiangli.maven.parse.cmd.Cmd
+import com.jiangli.maven.parse.cmd.version.NexusMvnXmlRequest
+import com.jiangli.maven.parse.cmd.version.VersionDto
 import feign.Feign
+import feign.FeignException
 import org.apache.commons.io.IOUtils
 import org.dom4j.DocumentHelper
 import org.springframework.beans.factory.BeanCreationException
@@ -41,6 +44,8 @@ open class StartCls {
     @Autowired
     private val processor: ConfigurationPropertiesBindingPostProcessor? = null
 
+    @Autowired
+    private val cmdList: List<Cmd>? = null
 
     fun ConfigurationPropertiesBindingPostProcessor.postProcess(bean: Any, dir: File, file: String) {
         val propFile = File(dir, file)
@@ -83,93 +88,25 @@ open class StartCls {
     @Bean
     open fun commandLineRunner(ctx: ApplicationContext): CommandLineRunner {
         return CommandLineRunner { args ->
-            println(Arrays.toString(args))
-            println(processor)
-            println(getBaseJarPath())
+            println("args:${Arrays.toString(args)}")
+            println("getBaseJarPath:${getBaseJarPath()}")
+            println("ApplicationHome source:${ApplicationHome(javaClass).source}")
+            println("config origin:$config")
+            println("cmd list:$cmdList")
 
-
-            println(config)
             //read external properties
             processor!!.postProcess(config!!,getBaseJarPath(),"config.properties")
-            println(config)
+            println("config merged:$config")
 
-//            println(config?.cmd)
-//            println(config?.urlprefix)
+            cmdList?.filter { it.getCmd().equals(config.cmd) }?.forEach {
+                println("【PROCESS】find cmd processor:${config.cmd} -> $it")
 
-            config?.let {
-                var realUrl = "${it.urlprefix}/${it.groupId?.replaceAll("\\.", "/")}/${it.artifaceId?.replaceAll("\\.", "/")}"
-//                realUrl = realUrl.replace("//", "/")
-                println(realUrl)
-
-                val request = Feign.builder()
-//                        .encoder(JAXBEncoder())
-//                        .decoder(JAXBDecoder(JAXBContextFactory.Builder().build()))
-                        .target(NexusMvnXmlRequest::class.java!!, realUrl)
-
-                val xmlStr = request.req()
-//                println(xmlStr)
-
-                val document = DocumentHelper.parseText(xmlStr)
-                val root = document.getRootElement()
-//                println(document)
-//                println(root.name)
-//                println(rootAttr)
-
-                val allVersions = root.selectNodes("//text")
-//                println(allVersions)
-
-                val list = mutableListOf<VersionDto>()
-                allVersions.forEach {
-//                    println(it.text)
-                    list.add(VersionDto(it.text))
-                }
-                Collections.sort(list)
-                println(list)
-
-                val retreiveIdx = it.retreiveIdx!!.toInt()-1
-                val filterList = list.filter { it.isNumberVersion() }
-                var nextVersion:VersionDto
-                nextVersion = if (retreiveIdx < filterList.size) {
-                    filterList[retreiveIdx].next(VersionDto(it.nextAddOffset.toString()))
-                } else {
-                    VersionDto(it.defaultVersion.toString())
-                }
-
-                println("最新版本:"+nextVersion)
-
-                //delete
-                getBaseJarPath().listFiles().filter { it.isFile && it.name.matches(""".*\.version""".toRegex()) }.forEach {
-                    it.delete()
-                }
-
-                //create x.version
-                File(getBaseJarPath(),"${nextVersion.str}.version").createNewFile()
-
-                var dependency = """
-<dependency>
-    <groupId>${it.groupId}</groupId>
-    <artifactId>${it.artifaceId}</artifactId>
-    <version>${nextVersion.str}</version>
-</dependency>
-                """.trimIndent()
-
-                //create dependencyFile
-                val dependencyFile = File(getBaseJarPath(), "依赖.txt")
-                dependencyFile.createNewFile()
-
-                IOUtils.write(dependency,FileOutputStream(dependencyFile),"utf8")
+                it.process(config!!)
             }
         }
     }
 
-    /**
-     * 获取当前jar包所在系统中的目录
-     */
-    fun getBaseJarPath(): File {
-        val home = ApplicationHome(javaClass)
-        val jarFile = home.source
-        return jarFile.parentFile
-    }
+
 }
 
 fun main(args: Array<String>) {
