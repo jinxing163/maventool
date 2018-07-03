@@ -16,34 +16,41 @@ object Util{
     /**
      * 获取当前jar包所在系统中的目录
      */
-    fun getBaseJarPath(): File {
-        val home = ApplicationHome(javaClass)
-        val jarFile = home.source
-        return jarFile.parentFile
+    fun getCurJarParentDir(): File {
+        val jar = getCurrentJar()
+        val pfile = jar.parentFile
+        return pfile
     }
 
     fun getCurrentJar(): File {
         val home = ApplicationHome(javaClass)
-        val jarFile = home.source
+        val jarFile = home.source ?: return home.dir
         return jarFile
+    }
+    fun getCurrentDiskSymbol(): String {
+        val jar = getCurrentJar()
+        return getFileDiskSymbol(jar.absolutePath)
+    }
+    fun getFileDiskSymbol(name:String): String {
+        return name.substring(0,name.indexOf(":"))
     }
 
     fun getFriendFile(name:String): File? {
-        val propFile = File(getBaseJarPath(), name)
+        val propFile = File(getCurJarParentDir(), name)
         if (!propFile.exists()) {
             return null
         }
         return propFile
     }
     fun createFriendFile(name:String): File? {
-        val propFile = File(getBaseJarPath(), name)
+        val propFile = File(getCurJarParentDir(), name)
         if (!propFile.exists()) {
              propFile.createNewFile()
         }
         return propFile
     }
     fun createFriendDir(name:String): File? {
-        val propFile = File(getBaseJarPath(), name)
+        val propFile = File(getCurJarParentDir(), name)
         if (!propFile.exists()) {
              propFile.mkdirs()
         }
@@ -64,7 +71,7 @@ object Util{
             ret.put(t.toString(),u.toString())
         }
 
-        ret.put("jarPath",getBaseJarPath().absolutePath)
+        ret.put("jarPath", getCurJarParentDir().absolutePath)
         return ret
     }
 
@@ -114,6 +121,7 @@ object Util{
 
         IOUtils.write(content, FileOutputStream(dependencyFile), "utf8")
 
+        println("【WRITE】write file # $dependencyFile")
         return dependencyFile
     }
 

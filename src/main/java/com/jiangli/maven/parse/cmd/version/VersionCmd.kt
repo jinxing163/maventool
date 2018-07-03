@@ -2,7 +2,7 @@ package com.jiangli.maven.parse.cmd.version
 
 import com.jiangli.maven.parse.Config
 import com.jiangli.maven.parse.Util
-import com.jiangli.maven.parse.Util.getBaseJarPath
+import com.jiangli.maven.parse.Util.getCurJarParentDir
 import com.jiangli.maven.parse.cmd.BaseCmd
 import feign.Feign
 import feign.FeignException
@@ -79,12 +79,12 @@ class VersionCmd:BaseCmd("version"){
             println("最新版本:" + nextVersion)
 
             //delete previous x.version
-            getBaseJarPath().listFiles().filter { it.isFile && it.name.matches(""".*\.version""".toRegex()) }.forEach {
+            getCurJarParentDir().listFiles().filter { it.isFile && it.name.matches(""".*\.version""".toRegex()) }.forEach {
                 it.delete()
             }
 
             //create x.version
-            File(getBaseJarPath(), "${nextVersion.str}.version").createNewFile()
+            File(getCurJarParentDir(), "${nextVersion.str}.version").createNewFile()
 
             var dependency = """
     <dependency>
@@ -95,7 +95,7 @@ class VersionCmd:BaseCmd("version"){
                     """.trimIndent()
 
             //create dependencyFile
-            Util.writeToFile(dependency,getBaseJarPath(),"依赖.txt")
+            Util.writeToFile(dependency, getCurJarParentDir(),"依赖.txt")
         }
     }
 }

@@ -1,13 +1,7 @@
 package com.jiangli.maven.parse
 
-import com.jiangli.maven.parse.Util.getBaseJarPath
+import com.jiangli.maven.parse.Util.getCurJarParentDir
 import com.jiangli.maven.parse.cmd.Cmd
-import com.jiangli.maven.parse.cmd.version.NexusMvnXmlRequest
-import com.jiangli.maven.parse.cmd.version.VersionDto
-import feign.Feign
-import feign.FeignException
-import org.apache.commons.io.IOUtils
-import org.dom4j.DocumentHelper
 import org.springframework.beans.factory.BeanCreationException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationHome
@@ -29,7 +23,6 @@ import org.springframework.util.ClassUtils
 import org.springframework.util.StringUtils
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.util.*
 
 
@@ -89,14 +82,14 @@ open class StartCls {
     open fun commandLineRunner(ctx: ApplicationContext): CommandLineRunner {
         return CommandLineRunner { args ->
             println("args:${Arrays.toString(args)}")
-            println("getBaseJarPath:${getBaseJarPath()}")
+            println("getBaseJarPath:${getCurJarParentDir()}")
             println("ApplicationHome source:${ApplicationHome(javaClass).source}")
-            println("config origin:$config")
+            println("【CONFIG】config origin:$config")
             println("cmd list:$cmdList")
 
             //read external properties
-            processor!!.postProcess(config!!,getBaseJarPath(),"config.properties")
-            println("config merged:$config")
+            processor!!.postProcess(config!!, getCurJarParentDir(),"config.properties")
+            println("【CONFIG】config merged:$config")
 
             cmdList?.filter { it.getCmd().equals(config.cmd) }?.forEach {
                 println("【PROCESS】find cmd processor:${config.cmd} -> $it")
