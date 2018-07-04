@@ -2,8 +2,13 @@ package com.jiangli.maven.parse
 
 import com.jiangli.maven.parse.Util.getCurJarParentDir
 import com.jiangli.maven.parse.Util.getCurrentDiskSymbol
+import com.jiangli.maven.parse.Util.getEnv
 import com.jiangli.maven.parse.Util.getMavenPath
+import com.jiangli.maven.parse.cmd.init.InitConfig
+import com.jiangli.maven.parse.cmd.init.InitJSONConfig
 import org.junit.Test
+import org.springframework.util.PropertyPlaceholderHelper
+import java.util.*
 
 /**
  * @author Jiangli
@@ -15,6 +20,42 @@ class UtilTest {
     fun test_getBaseJarPath() {
         println(getCurJarParentDir())
     }
+
+    @Test
+    fun test_StringValueResolver() {
+//        val x =  PropertyPlaceholderConfigurer()
+        val x =  PropertyPlaceholderHelper("\${","}",":",false)
+        val properties = Properties()
+        properties.put("aa","bb是多少")
+        val s = x.replacePlaceholders("aaa bbb \${aa}", properties)
+        println(s)
+
+        val env = getEnv()
+        properties.putAll(env)
+
+        val initJSONConfig = InitJSONConfig()
+        initJSONConfig.project_path = "啊啊啊\${jarPath}bbb"
+        val mutableListOf = mutableListOf<InitConfig>()
+        val element = InitConfig()
+        element.jarName="jarNamejarName\${jarPath}jarNamejarName"
+        mutableListOf.add(element)
+        initJSONConfig.configs = mutableListOf
+        val xd = x.replacePlaceholders("aaa bbb \${aa}", properties)
+        println(xd)
+
+        for (declaredField in InitJSONConfig::class.java.declaredFields) {
+            println(declaredField)
+            println(declaredField.type == String::class.java)
+            println(declaredField.type == List::class.java)
+            declaredField.isAccessible = true
+            println(declaredField.get(initJSONConfig))
+        }
+
+        println(initJSONConfig)
+        Util.resolveProps(initJSONConfig)
+        println(initJSONConfig)
+    }
+
 
     @Test
     fun test_getMavenPath() {

@@ -2,8 +2,10 @@ package com.jiangli.maven.parse
 
 import org.apache.commons.io.IOUtils
 import org.springframework.boot.ApplicationHome
+import org.springframework.util.PropertyPlaceholderHelper
 import java.io.File
 import java.io.FileOutputStream
+import java.util.*
 
 /**
  *
@@ -65,6 +67,37 @@ object Util{
         val friendFile = getFriendFile(name) ?: throw IllegalAccessException(msg)
         return friendFile
     }
+    fun resolveProps(obj:Any,properties:Properties) {
+        val x =  PropertyPlaceholderHelper("\${","}",":",false)
+        val fields = obj.javaClass.declaredFields
+        for (field in fields) {
+            field.isAccessible = true
+            if (field.type == String::class.java) {
+                val old = field.get(obj) as String?
+
+                if (old != null) {
+                    val newVal  = x.replacePlaceholders(old, properties)
+                    field.set(obj,newVal)
+                }
+            }
+
+            if (field.type == List::class.java) {
+                val old = field.get(obj) as List<*>?
+
+                old?.filterNotNull()
+                  ?.forEach { resolveProps(it,properties) }
+            }
+
+        }
+    }
+
+    fun resolveProps(obj:Any) {
+        val properties = Properties()
+        val env = getEnv()
+        properties.putAll(env)
+
+        resolveProps(obj,properties)
+    }
 
     fun getEnv(): MutableMap<String, String> {
         val ret:MutableMap<String,String> = mutableMapOf()
@@ -80,9 +113,9 @@ object Util{
         return ret
     }
 
-    fun resolveValue(name:String,context:Map<String, String>):String  {
-        TODO()
-    }
+//    fun resolveValue(name:String,context:Map<String, String>):String  {
+//        TODO()
+//    }
 
     fun deleteFilesUnderDir(dirPath: String): Int {
         val dir = File(dirPath)

@@ -7,8 +7,8 @@
 		"groupId":"com.zhihuishu.aries.classtools.chat",
 		"artifactId":"openapi-appserver"
 	}],
-//	"project_path":"${jarPath}"
-	"project_path":"C:\\projects\\aries-classtools"
+	"project_path":"${jarPath}"
+//	"project_path":"C:\\projects\\aries-classtools"
 }
 
 

@@ -91,6 +91,9 @@ open class StartCls {
             processor!!.postProcess(config!!, getCurJarParentDir(),"config.properties")
             println("【CONFIG】config merged:$config")
 
+            Util.resolveProps(config)
+            println("【CONFIG】config resolved:$config")
+
             cmdList?.filter { it.getCmd().equals(config.cmd) }?.forEach {
                 println("【PROCESS】find cmd processor:${config.cmd} -> $it")
 

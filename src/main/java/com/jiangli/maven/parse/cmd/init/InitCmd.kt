@@ -28,6 +28,8 @@ fun getJsonConfig(): InitJSONConfig {
     val gson = Gson()
     val initJSONConfig = gson.fromJson<InitJSONConfig>(JsonReader(FileReader(jsonConfig)), InitJSONConfig::class.java)
 
+    Util.resolveProps(initJSONConfig)
+
     return initJSONConfig
 }
 
@@ -201,7 +203,7 @@ Path
 
 附录:
 1.搜索路径
-${Util.getMavenPath(config)}
+${Util.getMavenPath(eachConfig)}
 2.maven 地址
 http://maven.i.zhihuishu.com:8081/nexus/#view-repositories;
 3.maven账号密码
