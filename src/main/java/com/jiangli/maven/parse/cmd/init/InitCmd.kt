@@ -6,7 +6,10 @@ import com.jiangli.maven.parse.Config
 import com.jiangli.maven.parse.Util
 import com.jiangli.maven.parse.Util.getEnv
 import com.jiangli.maven.parse.cmd.BaseCmd
+import com.jiangli.maven.parse.cmd.version.createDependencyFile
+import com.jiangli.maven.parse.cmd.version.createNextVersionFile
 import org.apache.commons.io.IOUtils
+import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Component
 import java.io.File
 import java.io.FileInputStream
@@ -37,11 +40,11 @@ class InitCmd: BaseCmd("init"){
         val env = getEnv()
         println("env:$env")
 
-        var dir = Util.getFriendFile(config.initDirName.toString())
+        var dir = Util.getFriendFile(initJSONConfig.targetDirName.toString())
         println("getDir:$dir")
 
         if (dir == null) {
-            dir = Util.createFriendDir(config.initDirName.toString())
+            dir = Util.createFriendDir(initJSONConfig.targetDirName.toString())
             println("createDir:$dir")
         } else {
             Util.deleteUnderDir(dir.absolutePath)
@@ -52,6 +55,12 @@ class InitCmd: BaseCmd("init"){
         initJSONConfig.configs.forEach {
             val eachDir = File(dir,it.profile_id)
             if (!eachDir.exists()) {
+                //clone config
+                var eachConfig = Config()
+                BeanUtils.copyProperties(config,eachConfig)
+                BeanUtils.copyProperties(it,eachConfig)
+                println("[CONFIG]each: $eachConfig")
+
                 //create dir
                 eachDir.mkdir()
                 println("loop: $eachDir")
@@ -132,7 +141,7 @@ set jarVersion=%%a
 )
 set jarVersion=%jarVersion:~0,-8%
 
-call mvn deploy:deploy-file -DgroupId=${it.groupId} -DartifactId=${it.artifaceId} -Dversion=%jarversion% -Dpackaging=jar -Dfile=${it.jarName} -Durl=${initJSONConfig.deploy_url} -DrepositoryId=${initJSONConfig.deploy_repositoryId}
+call mvn deploy:deploy-file -DgroupId=${it.groupId} -DartifactId=${it.artifactId} -Dversion=%jarversion% -Dpackaging=jar -Dfile=${it.jarName} -Durl=${initJSONConfig.deploy_url} -DrepositoryId=${initJSONConfig.deploy_repositoryId}
                 """.trimIndent(), eachDir,"deploy.bat")
 
                 //recompile.bat
@@ -150,8 +159,58 @@ cd %batPath%
 ${currentDiskSymbol}:
                 """.trimIndent(), eachDir,"recompile.bat")
 
+                //create x.version
+                val nextVersion = createNextVersionFile(eachDir,eachConfig)
+
+                //依赖.txt
+                createDependencyFile(eachDir,eachConfig,nextVersion)
+
+                //config.properties
+                Util.writeToFile("""
+config.cmd=version
+
+config.groupId=${it.groupId}
+config.artifactId=${it.artifactId}
+config.retreiveIdx=1
+config.defaultVersion=1.0.0
+config.nextAddOffset=0.0.1
+                """.trimIndent(), eachDir,"config.properties")
+
+                //config.properties
+                val userName = initJSONConfig.maven_username
+                val pwd = initJSONConfig.maven_pwd
+                Util.writeToFile("""
+前提：
+1.maven配置中的的settings.xml需要配置如下server,用于上传jar时的认证
+ <server>
+	<id>thirdparty</id>
+	<username>$userName</username>
+	<password>$pwd</password>
+</server>
+
+2.需要配置环境变量，例如
+MVN_HOME
+D:\apache-maven-3.2.5
+
+Path
+;%MVN_HOME%\bin    (附加到最后)
+
+说明：
+1.jar文件名必须为这种格式 openapi-treenity-xxxxxxx.jar
+2.当前文件夹只能有一个这种格式的的jar，如果有多个，只会有一个(随机地)被上传
+
+附录:
+1.搜索路径
+${Util.getMavenPath(config)}
+2.maven 地址
+http://maven.i.zhihuishu.com:8081/nexus/#view-repositories;
+3.maven账号密码
+$userName $pwd
+                """.trimIndent(), eachDir,"使用说明.txt")
+
             } //end of !exists
         }//end of each
+
 
     }
 

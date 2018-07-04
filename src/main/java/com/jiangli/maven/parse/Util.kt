@@ -13,6 +13,11 @@ import java.io.FileOutputStream
  */
 
 object Util{
+    fun getMavenPath(c:Config): String {
+        var path="""${c.groupId?.replaceAll("\\.","/")}/${c.artifactId?.replaceAll("\\.", "/")}"""
+        return path
+    }
+
     /**
      * 获取当前jar包所在系统中的目录
      */

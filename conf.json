@@ -1,15 +1,14 @@
 {
+    "targetDirName":"jar_deployment_scripts",
 	"configs":[{
 		"profile_id":"jar-openapi-app",
 		"mvn_cmd":"clean compile jar:jar -DskipTests -Dpkg=appserver",
 		"jarName":"temp.jar",
-		"groupId":"com.zhihuishu.aries.run",
-		"artifaceId":"openapi-appserver"
+		"groupId":"com.zhihuishu.aries.classtools.chat",
+		"artifactId":"openapi-appserver"
 	}],
 //	"project_path":"${jarPath}"
-	"project_path":"D:\\projects\\maventool",
-	"deploy_url":"http://maven.i.zhihuishu.com:8081/nexus/content/repositories/thirdparty/",
-	"deploy_repositoryId":"thirdparty"
+	"project_path":"C:\\projects\\aries-classtools"
 }
 
 
