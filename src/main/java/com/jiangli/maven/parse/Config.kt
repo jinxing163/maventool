@@ -18,10 +18,10 @@ open class Config {
     var retrieveIdx: java.lang.Integer? = null
     var nextAddOffset: java.lang.String? = null
     var defaultVersion: java.lang.String? = null
-
+    var weightOfEach: java.lang.String? = null
 
     override fun toString(): String {
-        return "Config(cmd=$cmd, urlprefix=$urlprefix, groupId=$groupId, artifaceId=$artifactId, retreiveIdx=$retrieveIdx, nextAddOffset=$nextAddOffset, defaultVersion=$defaultVersion)"
+        return "Config(cmd=$cmd, urlprefix=$urlprefix, groupId=$groupId, artifactId=$artifactId, retrieveIdx=$retrieveIdx, nextAddOffset=$nextAddOffset, defaultVersion=$defaultVersion, weightOfEach=$weightOfEach)"
     }
 
 

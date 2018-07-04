@@ -59,7 +59,12 @@ fun requestForNextVersion(it: Config): VersionDto {
         val filterList = versionList.filter { it.isNumberVersion() }
 
         nextVersion = if (retrieveIdx < filterList.size) {
-            filterList[retrieveIdx].next(VersionDto(it.nextAddOffset.toString()))
+            var next = filterList[retrieveIdx].next(VersionDto(it.nextAddOffset.toString()))
+
+            //check carry bit
+            next = next.carryBit(VersionDto(it.weightOfEach.toString()))
+
+            next
         } else {
             VersionDto(it.defaultVersion.toString())
         }

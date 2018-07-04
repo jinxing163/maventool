@@ -97,6 +97,55 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
         })
         return VersionDto(list.joinToString("."))
     }
+
+    fun carryBit(offset: VersionDto): VersionDto {
+        val split1 = this.str.split("\\.".toRegex())
+        var split2 = offset.str.split("\\.".toRegex())
+
+        if (split1.size < split2.size) {
+            split2 = removeLeftPoint(offset.str,split2.size - split1.size).split("\\.".toRegex())
+        }
+        else if (split1.size > split2.size) {
+            split2 = addLeftPoint(offset.str,split1.size - split2.size).split("\\.".toRegex())
+        }
+
+//        re
+        val list = mutableListOf<String>()
+        var carry = split1.lastIndex+1
+        var carryVal = 0
+        (split1.lastIndex downTo 0 ).forEach {
+            index ->
+            if (isNumber(split1[index]) && isNumber(split2[index])) {
+                var max = split2[index].toInt()
+                val rs = split1[index].toInt() + carryVal
+                carryVal = 0
+
+                if (rs >= max && max > 0 ) {
+                    carry = index - 1
+                    carryVal = 1
+                }
+            }
+        }
+
+        (0 .. carry-1).forEach {
+            index ->
+            if (isNumber(split1[index]))
+                list.add(split1[index])
+        }
+
+        if (carry <= split1.lastIndex && carry >= 0) {
+            if (isNumber(split1[carry]))
+                list.add((split1[carry].toInt()+1).toString())
+        }
+
+        (carry+1 .. split1.lastIndex).forEach {
+            index ->
+                list.add("0")
+        }
+
+        return VersionDto(list.joinToString("."))
+    }
+
 }
 
 fun main(args: Array<String>) {
@@ -105,4 +154,24 @@ fun main(args: Array<String>) {
     println(VersionDto("1.2.3").next(VersionDto("0.1")))
     println(VersionDto("1.2.3").next(VersionDto("0.0.1")))
     println(VersionDto("1.2.3").next(VersionDto("1.2.1")))
+    println(VersionDto("1.2.3").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.2.19").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.2.20").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.2.21").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.2.30").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.9.2").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.9.19").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("1.9.20").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("2.8.20").carryBit(VersionDto("0.10.20")))
+    println(VersionDto("999.9.20").carryBit(VersionDto("0.10.20")))
+
+//    (5 downTo 3).forEach {
+//        println(it)
+//    }
+//    (0 until  3).forEach {
+//        println(it)
+//    }
+//    (0 .. 3).forEach {
+//        println(it)
+//    }
 }
