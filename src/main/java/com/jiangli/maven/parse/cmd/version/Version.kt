@@ -146,6 +146,12 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
         return VersionDto(list.joinToString("."))
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other is VersionDto) {
+            return other.str == this.str
+        }
+        return super.equals(other)
+    }
 }
 
 fun main(args: Array<String>) {

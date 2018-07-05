@@ -6,8 +6,8 @@ import com.jiangli.maven.parse.Config
 import com.jiangli.maven.parse.Util
 import com.jiangli.maven.parse.Util.getEnv
 import com.jiangli.maven.parse.cmd.BaseCmd
+import com.jiangli.maven.parse.cmd.version.createCurrentVersionFile
 import com.jiangli.maven.parse.cmd.version.createDependencyFile
-import com.jiangli.maven.parse.cmd.version.createNextVersionFile
 import org.apache.commons.io.IOUtils
 import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Component
@@ -55,7 +55,7 @@ class InitCmd: BaseCmd("init"){
 
 
         initJSONConfig.configs.forEach {
-            val eachDir = File(dir,it.profile_id)
+            val eachDir = File(dir,it.name?:it.profile_id)
             if (!eachDir.exists()) {
                 //clone config
                 var eachConfig = Config()
@@ -162,7 +162,7 @@ ${currentDiskSymbol}:
                 """.trimIndent(), eachDir,"recompile.bat")
 
                 //create x.version
-                val nextVersion = createNextVersionFile(eachDir,eachConfig)
+                val nextVersion = createCurrentVersionFile(eachDir,eachConfig)
 
                 //依赖.txt
                 createDependencyFile(eachDir,eachConfig,nextVersion)

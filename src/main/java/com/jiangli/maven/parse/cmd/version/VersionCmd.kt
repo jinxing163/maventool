@@ -33,8 +33,48 @@ fun createNextVersionFile(destDir:File,it: Config): VersionDto {
     File(destDir, "${nextVersion.str}.version").createNewFile()
     return nextVersion
 }
+fun createCurrentVersionFile(destDir:File,it: Config): VersionDto {
+    val nextVersion = requestForCurrentVersion(it)
+    File(destDir, "${nextVersion.str}.version").createNewFile()
+    return nextVersion
+}
 
 fun requestForNextVersion(it: Config): VersionDto {
+    var nextVersion: VersionDto
+
+    val currentVersion = requestForCurrentVersion(it)
+    if (currentVersion == VersionDto(it.defaultVersion.toString())) {
+        nextVersion = currentVersion
+    } else {
+        nextVersion = currentVersion.next(VersionDto(it.nextAddOffset.toString()))
+
+        //check carry bit
+        nextVersion = nextVersion.carryBit(VersionDto(it.weightOfEach.toString()))
+    }
+
+    return nextVersion
+}
+fun requestForCurrentVersion(it: Config): VersionDto {
+    var currentVersion: VersionDto? = null
+
+    val versionList = requestForCurrentVersions(it)
+
+    currentVersion = if (versionList.isEmpty()) {
+        VersionDto(it.defaultVersion.toString())
+    } else {
+        val retrieveIdx = it.retrieveIdx!!.toInt() - 1
+        val filterList = versionList.filter { it.isNumberVersion() }
+        if (retrieveIdx < filterList.size) {
+            filterList[retrieveIdx]
+        } else {
+            VersionDto(it.defaultVersion.toString())
+        }
+    }
+
+    return currentVersion
+}
+
+private fun requestForCurrentVersions(it: Config): MutableList<VersionDto> {
     var requestUrl = "${it.urlprefix}/${getMavenPath(it)}"
     println("request for info:$requestUrl")
     //                requestUrl = requestUrl.replace("//", "/")
@@ -44,35 +84,6 @@ fun requestForNextVersion(it: Config): VersionDto {
             //                        .decoder(JAXBDecoder(JAXBContextFactory.Builder().build()))
             .target(NexusMvnXmlRequest::class.java!!, requestUrl)
 
-    var nextVersion: VersionDto? = null
-
-    val versionList = requestForCurrentVersions(request)
-    //                println(xmlStr)
-
-    if (versionList.isEmpty()) {
-        nextVersion = VersionDto(it.defaultVersion.toString())
-        println("当前没有version记录 使用默认版本:$nextVersion")
-    } else {
-        println("当前有version记录:$versionList")
-
-        val retrieveIdx = it.retrieveIdx!!.toInt() - 1
-        val filterList = versionList.filter { it.isNumberVersion() }
-
-        nextVersion = if (retrieveIdx < filterList.size) {
-            var next = filterList[retrieveIdx].next(VersionDto(it.nextAddOffset.toString()))
-
-            //check carry bit
-            next = next.carryBit(VersionDto(it.weightOfEach.toString()))
-
-            next
-        } else {
-            VersionDto(it.defaultVersion.toString())
-        }
-    }
-    return nextVersion
-}
-
-private fun requestForCurrentVersions(request: NexusMvnXmlRequest): MutableList<VersionDto> {
     val list = mutableListOf<VersionDto>()
 
     val xmlStr: String

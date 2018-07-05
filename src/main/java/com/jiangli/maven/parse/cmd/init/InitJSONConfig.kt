@@ -26,6 +26,7 @@ class InitJSONConfig {
 }
 
 class InitConfig {
+    var name:String? = null
     var profile_id:String? = null
     var mvn_cmd:String? = null
     var jarName:String? = null
@@ -33,7 +34,7 @@ class InitConfig {
     var artifactId:String? = null
 
     override fun toString(): String {
-        return "InitConfig(profile_id=$profile_id, mvn_cmd=$mvn_cmd, jarName=$jarName, groupId=$groupId, artifactId=$artifactId)"
+        return "InitConfig(name=$name, profile_id=$profile_id, mvn_cmd=$mvn_cmd, jarName=$jarName, groupId=$groupId, artifactId=$artifactId)"
     }
 
 

@@ -1,6 +1,7 @@
 {
     "targetDirName":"jar_deployment_scripts",
 	"configs":[{
+		"name":"jar-openapi-app",
 		"profile_id":"jar-openapi-app",
 		"mvn_cmd":"clean compile jar:jar -DskipTests -Dpkg=appserver",
 		"jarName":"temp.jar",
