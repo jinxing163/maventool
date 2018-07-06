@@ -1,5 +1,8 @@
 package com.jiangli.maven.parse.cmd.version
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  *
  *
@@ -59,8 +62,30 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
         }
         return true
     }
-     fun isNumberVersion() :Boolean {
+    fun isNumberVersion() :Boolean {
         return isNumberVersion(this.str)
+    }
+    fun isDateVersion() :Boolean {
+        return isDateVersion(this.str)
+    }
+
+
+    open val format = "yyyyMMdd"
+
+    private fun isDateVersion(str:String) :Boolean {
+        try {
+            //20180702
+            //yyyyMMdd
+
+            if (!str.contains(".") && (str.length > format.length)) {
+                val split1 = str.substring(0, format.length)
+                SimpleDateFormat(format).parse(split1)
+                return true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return false
     }
 
     fun addLeftPoint(str:String,i:Int): String {
@@ -71,16 +96,44 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
         return ret
     }
 
+    fun addLeftZero(str:String,i:Int): String {
+        var ret = str
+        if (str.length < i ) {
+            (0 until i-str.length).forEach {
+                ret = "0"+ ret
+            }
+        }
+        return  ret
+    }
+
     fun removeLeftPoint(str:String,i:Int): String {
         val split1 = str.split("\\.".toRegex())
         return split1.subList(i,split1.size).joinToString(".")
     }
 
     fun next(offset: VersionDto): VersionDto {
-        val split1 = this.str.split("\\.".toRegex())
+        var thisVerStr = this.str
+
+        //2018070202 -> 20180702.02
+        val isDateVer = isDateVersion()
+        if (isDateVer) {
+            var hisDay = thisVerStr.substring(0, format.length)
+            val today = SimpleDateFormat(format).format(Date())
+            var dayNum = thisVerStr.substring(format.length).toInt()
+            if (hisDay!=today) {
+                dayNum = 0
+                hisDay = today
+            }
+
+            //20180702.2
+            thisVerStr = "${hisDay}.${dayNum}"
+        }
+
+        //[20180702,02]
+        //[1,2,3]
+        val split1 = thisVerStr.split("\\.".toRegex())
         var split2 = offset.str.split("\\.".toRegex())
 
-        // 20180101 0.0.1
         // 1.2.3 0.1
         if (split1.size < split2.size) {
             split2 = removeLeftPoint(offset.str,split2.size - split1.size).split("\\.".toRegex())
@@ -89,27 +142,31 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
             split2 = addLeftPoint(offset.str,split1.size - split2.size).split("\\.".toRegex())
         }
 
+        //2.0.4
         val list = mutableListOf<String>()
         split1.forEachIndexed({ index, s ->
             if (isNumber(split1[index]) && isNumber(split2[index])) {
-                list.add((split1[index].toInt()+split2[index].toInt()).toString())
+                val nextCalcNum = split1[index].toInt() + split2[index].toInt()
+
+                var nextCalcStr = if (isDateVer && index == split1.lastIndex) {
+                    addLeftZero(nextCalcNum.toString(),2)
+                } else nextCalcNum.toString()
+
+                list.add(nextCalcStr)
             }
         })
-        return VersionDto(list.joinToString("."))
+
+        return if (isDateVer)  VersionDto(list.joinToString(""))
+        else  VersionDto(list.joinToString("."))
     }
 
     fun carryBit(offset: VersionDto): VersionDto {
         val split1 = this.str.split("\\.".toRegex())
         var split2 = offset.str.split("\\.".toRegex())
-
-        if (split1.size < split2.size) {
-            split2 = removeLeftPoint(offset.str,split2.size - split1.size).split("\\.".toRegex())
-        }
-        else if (split1.size > split2.size) {
-            split2 = addLeftPoint(offset.str,split1.size - split2.size).split("\\.".toRegex())
+        if (split1.size != split2.size) {
+            return this
         }
 
-//        re
         val list = mutableListOf<String>()
         var carry = split1.lastIndex+1
         var carryVal = 0
@@ -155,8 +212,11 @@ data class VersionDto(val str: String):Comparable<VersionDto>{
 }
 
 fun main(args: Array<String>) {
+    println(VersionDto("2018031402").carryBit(VersionDto("0.10.20")))
     println(VersionDto("20180101").next(VersionDto("0.0.1")))
     println(VersionDto("20180101").next(VersionDto("1")))
+    println(VersionDto("2018031402").next(VersionDto("0.0.1")))
+    println(VersionDto("2018031402").next(VersionDto("1")))
     println(VersionDto("1.2.3").next(VersionDto("0.1")))
     println(VersionDto("1.2.3").next(VersionDto("0.0.1")))
     println(VersionDto("1.2.3").next(VersionDto("1.2.1")))

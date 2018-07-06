@@ -1,0 +1,716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zhihuishu.aries</groupId>
+    <artifactId>aries-server</artifactId>
+    <version>1.0.0</version>
+    <name>aries-server</name>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.9.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-pool</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/tk.mybatis/mapper -->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+
+        <!--pagehelper-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+        <!-- 会造成Dubbo调用出现 java.lang.ClassCastException 问题 -->
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zhihuishu.toolkit</groupId>
+            <artifactId>aries-toolkit</artifactId>
+            <version>2.2.3.1-alpha</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <!-- json  测试用例解析文本用-->
+        <dependency>
+            <groupId>net.sf.json-lib</groupId>
+            <artifactId>json-lib</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ezmorph</groupId>
+            <artifactId>ezmorph</artifactId>
+            <version>1.0.6</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- /json  测试用例解析文本用-->
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>4.11</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dubbo.springboot</groupId>
+            <artifactId>spring-boot-starter-dubbo</artifactId>
+            <version>0.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dubbo</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>zookeeper</artifactId>
+                    <groupId>org.apache.zookeeper</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.2</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>zookeeper</artifactId>
+                    <groupId>org.apache.zookeeper</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>3.4.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>log4j</artifactId>
+                    <groupId>log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.5.9</version>
+        </dependency>
+
+        <!-- 短信推送接口 -->
+        <dependency>
+            <groupId>com.zhihuishu.base</groupId>
+            <artifactId>aries-openapi-message</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>javax.persistence</groupId>-->
+            <!--<artifactId>persistence-api</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
+
+
+        <!-- 定时器开关配置 -->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+
+        <!--解决报错-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
+
+
+        <!--性能测试-->
+        <dependency>
+            <groupId>com.zhihuishu.teacher.commons</groupId>
+            <artifactId>junit-extension</artifactId>
+            <version>1.0.3</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <profiles>
+        <!-- Linux 系统下拎包时，排除测试用的日志配置文件 -->
+        <profile>
+            <id>deployment</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>logback-test.xml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- -Pjar-openapi clean compile jar:jar -DskipTests -DmoduleName=XXX -->
+
+        <!-- 三端都用如下命令 -->
+        <!-- -Pjar-openapi clean compile jar:jar -DskipTests -DmoduleName=interaction-->
+
+        <!--app 坐标-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.operation</groupId>-->
+            <!--<artifactId>openapi-operation</artifactId>-->
+            <!--<version>2018032101</version>-->
+        <!--</dependency>-->
+
+        <!-- web端 -->
+        <!---Pjar-operation clean compile jar:jar -DskipTests -Dpkg=manage-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.operation</groupId>-->
+            <!--<artifactId>openapi-openads</artifactId>-->
+            <!--<version>2018022801</version>-->
+        <!--</dependency>-->
+
+        <profile>
+            <id>jar-openapi</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>openapi-${moduleName}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/${moduleName}/openapi/dto/*</include>
+                                <include>com/zhihuishu/aries/${moduleName}/openapi/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- 给appserver封装服务 -->
+        <!-- -Pjar-discuss clean compile jar:jar -DskipTests -Dpkg=appserver -->
+        <!-- 给后台管理项目 -->
+        <!-- -Pjar-discuss clean compile jar:jar -DskipTests -Dpkg=manage -->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+        <!--<groupId>com.zhihuishu.aries.course</groupId>-->
+        <!--<artifactId>openapi-${pkg}</artifactId>-->
+        <!--<version>1.0.2</version>-->
+        <!--</dependency>-->
+        <profile>
+            <id>jar-discuss</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>discuss-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/discuss/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/discuss/openapi/${pkg}/dto/*</include>
+                                <include>com/zhihuishu/aries/discuss/openapi/${pkg}/vo/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 给http封装服务 -->
+        <!-- -Pjar-course clean compile jar:jar -DskipTests -Dpkg=appserver -->
+        <!-- 给前端项目 -->
+        <!-- -Pjar-course clean compile jar:jar -DskipTests -Dpkg=manage -->
+        <!-- 给前端h5项目 -->
+        <!-- -Pjar-course clean compile jar:jar -DskipTests -Dpkg=manageh5 -->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.course</groupId>-->
+            <!--<artifactId>openapi-${pkg}</artifactId>-->
+            <!--<version>1.0.2</version>-->
+        <!--</dependency>-->
+        <profile>
+            <id>jar-course</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>course-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/course/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/course/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>jar-teachmanage</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>teachmanage-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/teachmanage/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/teachmanage/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- 给前端项目 -->
+        <!-- -Pjar-run clean compile jar:jar -DskipTests -Dpkg=manage -->
+        <!--给app项目-->
+        <!-- -Pjar-run clean compile jar:jar -DskipTests -Dpkg=appserver -->
+        <profile>
+            <id>jar-run</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>run-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/run/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/run/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+ 		<!-- 给前端项目 -->
+        <!-- -Pjar-study clean compile jar:jar -DskipTests -Dpkg=study -->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.study.openapi</groupId>-->
+            <!--<artifactId>openapi-${pkg}</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+
+        <profile>
+            <id>jar-study</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>course-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/study/openapi/*</include>
+                                <include>com/zhihuishu/aries/study/openapi/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- 给前端项目 -->
+        <!-- -Pjar-study-manage clean compile jar:jar -DskipTests -Dpkg=manage -->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.study.openapi</groupId>-->
+            <!--<artifactId>openapi-${pkg}</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+        <profile>
+            <id>jar-study-manage</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>study-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/study/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/study/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+		<!-- 给前端项目 -->
+        <!-- -Pjar-inviteFriend clean compile jar:jar -DskipTests -Dpkg=inviteFriend -->
+        <!---Pjar-interaction clean compile jar:jar -DskipTests -Dpkg=appserver -->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+            <!--<groupId>com.zhihuishu.aries.study.openapi</groupId>-->
+            <!--<artifactId>openapi-${pkg}</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
+
+        <profile>
+            <id>jar-inviteFriend</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>course-${pkg}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/interaction/openapi/dto/*</include>
+                                <include>com/zhihuishu/aries/interaction/openapi/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- 给http封装服务 -->
+        <!-- -Pjar-openapi-course clean compile jar:jar -DskipTests -Dpkg=appserver -DwarName=th-teacherhome-1.2.3 -->
+        <!-- 给前端项目 -->
+        <!-- -Pjar-openapi-course clean compile jar:jar -DskipTests -Dpkg=manage -DwarName=th-teacherhome-1.2.3-->
+        <!--使用方依赖-->
+        <!--<dependency>-->
+        <!--<groupId>com.zhihuishu.aries.course</groupId>-->
+        <!--<artifactId>openapi-${pkg}</artifactId>-->
+        <!--<version>1.0.2</version>-->
+        <!--</dependency>-->
+
+        <!--courese-openapi 打包命令-->
+        <profile>
+            <id>jar-openapi-course</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>${warName}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/course/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/course/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- -Pjar-openapi-study clean compile jar:jar -DskipTests -Dpkg=H5 -DwarName=openapi-H5-1.0.0-->
+        <!--study-openapi 打包命令-->
+        <profile>
+            <id>jar-openapi-study</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>${warName}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/study/openapi/${pkg}/*</include>
+                                <include>com/zhihuishu/aries/study/openapi/${pkg}/dto/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+        -Pjar-openapi-user clean compile jar:jar -DskipTests -Dpkg=user -DwarName=aries-openapi-user-1.3.3
+        -->
+        <!--study-openapi 打包命令-->
+        <profile>
+            <id>jar-openapi-user</id>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/java</directory>
+                        <includes>
+                            <include>**/*.java</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <finalName>${warName}</finalName>
+                            <includes>
+                                <include>com/zhihuishu/aries/${pkg}/openapi/*</include>
+                                <include>com/zhihuishu/aries/${pkg}/openapi/dto/*</include>
+                                <include>com/zhihuishu/aries/${pkg}/enums/*</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>
