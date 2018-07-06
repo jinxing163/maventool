@@ -27,9 +27,15 @@ fun main(args: Array<String>) {
             "target/maven_tool.jar"
     )
 
-//    val exec = Runtime.getRuntime().exec("${projectPath}/$pkgCmd")
-//    exec.waitFor()
-//    exec.outputStream
+    val exec = Runtime.getRuntime().exec("${projectPath}/$pkgCmd")
+    val inputStream = exec.inputStream
+    val thread = Thread(Runnable {
+        IOUtils.copy(inputStream,System.out)
+    })
+    thread.isDaemon = true
+    thread.start()
+
+    exec.waitFor()
 
     ZipUtil.pkg(projectPath,zipName,*list.toTypedArray())
 }
