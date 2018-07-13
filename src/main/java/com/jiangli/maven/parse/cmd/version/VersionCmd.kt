@@ -43,14 +43,14 @@ fun requestForNextVersion(it: Config): VersionDto {
     var nextVersion: VersionDto
 
     val currentVersion = requestForCurrentVersion(it)
-    if (currentVersion == VersionDto(it.defaultVersion.toString())) {
-        nextVersion = currentVersion
-    } else {
+//    if (currentVersion == VersionDto(it.defaultVersion.toString())) {
+//        nextVersion = currentVersion
+//    } else {
         nextVersion = currentVersion.next(VersionDto(it.nextAddOffset.toString()))
 
         //check carry bit
         nextVersion = nextVersion.carryBit(VersionDto(it.weightOfEach.toString()))
-    }
+//    }
 
     return nextVersion
 }

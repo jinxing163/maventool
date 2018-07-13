@@ -14,8 +14,8 @@ class VersionCmdKtTest {
         val config = Config()
 //        com.zhihuishu.aries.run
 //        openapi-appserver
-        config.groupId="com.zhihuishu.aries.run" as java.lang.String
-        config.artifactId ="openapi-appserver" as java.lang.String
+        config.groupId="com.zhihuishu.qa" as java.lang.String
+        config.artifactId ="appsteacher-courseqa" as java.lang.String
         println(requestForCurrentVersion(config))
         println(requestForNextVersion(config))
     }
