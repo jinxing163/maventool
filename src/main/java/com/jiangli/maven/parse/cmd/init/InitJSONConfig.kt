@@ -13,9 +13,14 @@ class InitJSONConfig {
     var deploy_repositoryId:String? = "thirdparty"
     var configs:List<InitConfig> = mutableListOf()
 
+    //init:
     var maven_username:String? = "deployment"
+    //init:
     var maven_pwd:String? = "deployment123"
+
+    //init:for 使用说明.txt
     var maven_search_url:String? = "http://maven.i.zhihuishu.com:8081/nexus/#view-repositories;"
+    //version:for version sync
     var maven_version_urlprefix:String? = "http://maven.i.zhihuishu.com:8081/nexus/service/local/repositories/thirdparty/content"
 
     override fun toString(): String {

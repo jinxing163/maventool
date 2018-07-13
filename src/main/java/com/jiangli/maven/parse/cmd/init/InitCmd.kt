@@ -176,18 +176,17 @@ config.artifactId=${it.artifactId}
 config.retreiveIdx=1
 config.defaultVersion=1.0.0
 config.nextAddOffset=0.0.1
+config.weightOfEach=0.10.20
                 """.trimIndent(), eachDir,"config.properties")
 
                 //config.properties
-                val userName = initJSONConfig.maven_username
-                val pwd = initJSONConfig.maven_pwd
                 Util.writeToFile("""
 前提：
 1.maven配置中的的settings.xml需要配置如下server,用于上传jar时的认证
  <server>
 	<id>thirdparty</id>
-	<username>$userName</username>
-	<password>$pwd</password>
+	<username>${initJSONConfig.maven_username}</username>
+	<password>${initJSONConfig.maven_pwd}</password>
 </server>
 
 2.需要配置环境变量，例如
@@ -205,9 +204,9 @@ Path
 1.搜索路径
 ${Util.getMavenPath(eachConfig)}
 2.maven 地址
-http://maven.i.zhihuishu.com:8081/nexus/#view-repositories;
+${initJSONConfig.maven_search_url}
 3.maven账号密码
-$userName $pwd
+${initJSONConfig.maven_username} ${initJSONConfig.maven_pwd}
                 """.trimIndent(), eachDir,"使用说明.txt")
 
             } //end of !exists
