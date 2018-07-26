@@ -8,6 +8,7 @@ import com.jiangli.maven.parse.Util.getEnv
 import com.jiangli.maven.parse.cmd.BaseCmd
 import com.jiangli.maven.parse.cmd.version.createCurrentVersionFile
 import com.jiangli.maven.parse.cmd.version.createDependencyFile
+import com.jiangli.maven.parse.findRepoPath
 import org.apache.commons.io.IOUtils
 import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Component
@@ -34,7 +35,7 @@ fun getJsonConfig(): InitJSONConfig {
 }
 
 @Component
-class InitCmd: BaseCmd("init"){
+class InitCmd : BaseCmd("init") {
     override fun process(config: Config) {
         val initJSONConfig = getJsonConfig()
         println("【INIT-CONFIG】:$initJSONConfig")
@@ -44,6 +45,9 @@ class InitCmd: BaseCmd("init"){
 
         var dir = Util.getFriendFile(initJSONConfig.targetDirName.toString())
         println("getDir:$dir")
+
+        val repoPath = findRepoPath()
+        println("本地maven库地址:$repoPath")
 
         if (dir == null) {
             dir = Util.createFriendDir(initJSONConfig.targetDirName.toString())
@@ -55,12 +59,12 @@ class InitCmd: BaseCmd("init"){
 
 
         initJSONConfig.configs.forEach {
-            val eachDir = File(dir,it.name?:it.profile_id)
+            val eachDir = File(dir, it.name ?: it.profile_id)
             if (!eachDir.exists()) {
                 //clone config
                 var eachConfig = Config()
-                BeanUtils.copyProperties(config,eachConfig)
-                BeanUtils.copyProperties(it,eachConfig)
+                BeanUtils.copyProperties(config, eachConfig)
+                BeanUtils.copyProperties(it, eachConfig)
                 println("[CONFIG]each: $eachConfig")
 
                 //create dir
@@ -76,7 +80,7 @@ class InitCmd: BaseCmd("init"){
                 println("try copy jar:$targetJar")
                 if (targetJar.name.endsWith(".jar")) {
                     targetJar.createNewFile()
-                    IOUtils.copy(FileInputStream(currentJar),FileOutputStream(targetJar))
+                    IOUtils.copy(FileInputStream(currentJar), FileOutputStream(targetJar))
                 }
 
                 //all.bat
@@ -86,19 +90,19 @@ call update_version.bat
 call package.bat
 call deploy.bat
 call recompile.bat
-                """.trimIndent(), eachDir,"all.bat")
+                """.trimIndent(), eachDir, "all.bat")
 
                 //del.bat
                 Util.writeToFile("""
 del "${it.jarName}"
 echo  deleted
-                """.trimIndent(), eachDir,"del.bat")
+                """.trimIndent(), eachDir, "del.bat")
 
                 //update_version.bat
                 Util.writeToFile("""
 java -version
 java -jar ${jarName}
-                """.trimIndent(), eachDir,"update_version.bat")
+                """.trimIndent(), eachDir, "update_version.bat")
 
                 val currentDiskSymbol = Util.getCurrentDiskSymbol()
                 val fileDiskSymbol = Util.getFileDiskSymbol(initJSONConfig.project_path.toString())
@@ -134,7 +138,7 @@ copy "%targetPath%" "%batPath%\%targetName%" /Y
 
 cd %batPath%
 ${currentDiskSymbol}:
-                """.trimIndent(), eachDir,"package.bat")
+                """.trimIndent(), eachDir, "package.bat")
 
                 //deploy.bat
                 Util.writeToFile("""
@@ -144,7 +148,7 @@ set jarVersion=%%a
 set jarVersion=%jarVersion:~0,-8%
 
 call mvn deploy:deploy-file -DgroupId=${it.groupId} -DartifactId=${it.artifactId} -Dversion=%jarversion% -Dpackaging=jar -Dfile=${it.jarName} -Durl=${initJSONConfig.deploy_url} -DrepositoryId=${initJSONConfig.deploy_repositoryId}
-                """.trimIndent(), eachDir,"deploy.bat")
+                """.trimIndent(), eachDir, "deploy.bat")
 
                 //recompile.bat
                 Util.writeToFile("""
@@ -159,13 +163,13 @@ echo recompile over...
 
 cd %batPath%
 ${currentDiskSymbol}:
-                """.trimIndent(), eachDir,"recompile.bat")
+                """.trimIndent(), eachDir, "recompile.bat")
 
                 //create x.version
-                val nextVersion = createCurrentVersionFile(eachDir,eachConfig)
+                val nextVersion = createCurrentVersionFile(eachDir, eachConfig)
 
                 //依赖.txt
-                createDependencyFile(eachDir,eachConfig,nextVersion)
+                createDependencyFile(eachDir, eachConfig, nextVersion)
 
                 //config.properties
                 Util.writeToFile("""
@@ -177,7 +181,7 @@ config.retreiveIdx=1
 config.defaultVersion=1.0.0
 config.nextAddOffset=0.0.1
 config.weightOfEach=0.10.20
-                """.trimIndent(), eachDir,"config.properties")
+                """.trimIndent(), eachDir, "config.properties")
 
                 //config.properties
                 Util.writeToFile("""
@@ -207,7 +211,27 @@ ${Util.getMavenPath(eachConfig)}
 ${initJSONConfig.maven_search_url}
 3.maven账号密码
 ${initJSONConfig.maven_username} ${initJSONConfig.maven_pwd}
-                """.trimIndent(), eachDir,"使用说明.txt")
+                """.trimIndent(), eachDir, "使用说明.txt")
+
+
+                Util.getMavenPath(eachConfig)
+
+                repoPath?.let {
+                    //openLocalDependencyDir.bat
+                    Util.writeToFile("""
+start ${repoPath}/${Util.getMavenPath(eachConfig)}
+                """.trimIndent(), eachDir, "openLocalDependencyDir.bat")
+
+                    //deleteLocalDependencyByVersion.bat
+                    Util.writeToFile("""
+for /f "delims=" %%a in ('dir /b/a-d/oN *.version') do (
+set jarVersion=%%a
+)
+set jarVersion=%jarVersion:~0,-8%
+
+rmdir  "${repoPath}/${Util.getMavenPath(eachConfig)}/%jarVersion%" /s /q
+                """.trimIndent(), eachDir, "deleteLocalDependencyByVersion.bat")
+                }
 
             } //end of !exists
         }//end of each
