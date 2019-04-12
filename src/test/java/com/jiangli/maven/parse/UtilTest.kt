@@ -22,6 +22,13 @@ class UtilTest {
     }
 
     @Test
+    fun test_str() {
+       val a:String = "aaa"
+        val b:java.lang.String =  a as java.lang.String
+        println(b)
+    }
+
+    @Test
     fun test_StringValueResolver() {
 //        val x =  PropertyPlaceholderConfigurer()
         val x =  PropertyPlaceholderHelper("\${","}",":",false)

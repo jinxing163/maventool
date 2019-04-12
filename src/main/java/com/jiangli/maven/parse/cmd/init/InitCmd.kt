@@ -58,6 +58,7 @@ class InitCmd : BaseCmd("init") {
         }
 
 
+//        生成脚本
         initJSONConfig.configs.forEach {
             val eachDir = File(dir, it.name ?: it.profile_id)
             if (!eachDir.exists()) {
@@ -65,6 +66,7 @@ class InitCmd : BaseCmd("init") {
                 var eachConfig = Config()
                 BeanUtils.copyProperties(config, eachConfig)
                 BeanUtils.copyProperties(it, eachConfig)
+                eachConfig.urlprefix = initJSONConfig.maven_version_urlprefix as java.lang.String
                 println("[CONFIG]each: $eachConfig")
 
                 //create dir
@@ -175,15 +177,16 @@ ${currentDiskSymbol}:
                 Util.writeToFile("""
 config.cmd=version
 
-config.groupId=${it.groupId}
-config.artifactId=${it.artifactId}
-config.retreiveIdx=1
-config.defaultVersion=1.0.0
-config.nextAddOffset=0.0.1
-config.weightOfEach=0.10.20
+config.urlprefix=${eachConfig.urlprefix}
+config.groupId=${eachConfig.groupId}
+config.artifactId=${eachConfig.artifactId}
+config.retreiveIdx=${eachConfig.retrieveIdx}
+config.defaultVersion=${eachConfig.defaultVersion}
+config.nextAddOffset=${eachConfig.nextAddOffset}
+config.weightOfEach=${eachConfig.weightOfEach}
                 """.trimIndent(), eachDir, "config.properties")
 
-                //config.properties
+                //使用说明.txt
                 Util.writeToFile("""
 前提：
 1.maven配置中的的settings.xml需要配置如下server,用于上传jar时的认证

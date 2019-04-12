@@ -12,5 +12,6 @@ class InitCmdKtTest {
     @Test
     fun test_getJsonConfig() {
         val initJSONConfig = getJsonConfig()
+        println(initJSONConfig)
     }
 }

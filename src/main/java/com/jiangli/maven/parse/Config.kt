@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 open class Config {
     var cmd: java.lang.String? = null
 
-    var urlprefix: java.lang.String? = "http://maven.i.zhihuishu.com:8081/nexus/service/local/repositories/thirdparty/content" as java.lang.String
+    var urlprefix: java.lang.String? = null
     var groupId: java.lang.String? = null
     var artifactId: java.lang.String? = null
     var retrieveIdx: java.lang.Integer? = 1 as java.lang.Integer

@@ -14,6 +14,4 @@ interface NexusMvnXmlRequest {
     @RequestLine("GET /")
     fun req(): String
 
-//    @RequestLine("GET /")
-//    fun req(): Root
 }

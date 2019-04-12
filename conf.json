@@ -1,5 +1,14 @@
 {
     "targetDirName":"jar_deployment_scripts",
+//   解析版本号时需要去这个网站拿所有版本号,若填错导致同步拿到的版本号都为1.0.0
+    "maven_version_urlprefix":"http://maven.i.zhihuishu.com:8081/nexus/service/local/repositories/thirdparty/content",
+//  下面四项在把jar部署到nexus库时用到，填错会导致部署失败，从而版本号一直加不上去
+    "deploy_url":"http://maven.i.zhihuishu.com:8081/nexus/content/repositories/thirdparty/",
+    "deploy_repositoryId":"thirdparty",
+    "maven_username":"deployment",
+    "maven_pwd":"deployment123",
+//  这个随便填也没事，notepad打开 使用说明.txt 后能双击链接定位
+    "maven_search_url":"http://maven.i.zhihuishu.com:8081/nexus/#view-repositories;",
 	"configs":[{
 		"name":"jar-openapi-app",
 		"profile_id":"jar-openapi-app",
